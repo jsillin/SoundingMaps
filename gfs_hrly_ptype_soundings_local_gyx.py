@@ -214,7 +214,7 @@ for i in range(0,120):
     ax1.set_title('Precipitation Type and Selected Soundings',fontsize=16)
     ax1.set_title('\n Valid: '+time.dt.strftime('%Y-%m-%d %H:%MZ').item(),fontsize=11,loc='right')
     ax1.set_title('\n GFS Init: '+init_time.dt.strftime('%Y-%m-%d %H:%MZ').item(),fontsize=11,loc='left')
-    ax1.set_extent((255, 285, 25, 50))#, crs = zH5_crs)    # Set a title and show the plot
+    ax1.set_extent((287.25, 291.25, 42.5, 45.75))#, crs = zH5_crs)    # Set a title and show the plot
 
     #################### SOUNDINGS ################################
     '''
@@ -277,8 +277,10 @@ for i in range(0,120):
     r=5
     for i in range(0,r):
         lon = -startlon-(londelt*i)
-        lat = startlat+lat_delts[i]
         sound_lons.append(lon)
+
+    for i in range(0,6):
+        lat = startlat+lat_delts[i]
         sound_lats.append(lat)
     print(sound_lats)
     for i in range(1,r):
