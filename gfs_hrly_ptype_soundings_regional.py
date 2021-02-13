@@ -150,8 +150,6 @@ for i in range(0,120):
     td2m = data['sfc_td'].squeeze()
     td2m = ((td2m - 273.15)*(9./5.))+32.
     td2ms = ndimage.gaussian_filter(td2m,sigma=5,order=0)
-    wb2m = wet_bulb(t2m,td2m)
-    wb2mc = (wb2m-32.)*(5./9.)
 
     #Fetch reflectivity data
     reflectivity = data['radar'].squeeze()
