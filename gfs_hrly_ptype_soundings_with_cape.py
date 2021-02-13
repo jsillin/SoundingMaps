@@ -279,8 +279,6 @@ for i in range(0,120):
 
         if capeout >capemin:
             # Shade areas of CAPE and CIN
-            print(sound_temps)
-            print(parcel_prof)
             skew.shade_cin(sound_pres, sound_temps.data*units.degC, parcel_prof)
             skew.shade_cape(sound_pres, sound_temps.data*units.degC, parcel_prof)
             skew.plot(sound_pres,parcel_prof,color='fuchsia',linewidth=1)
