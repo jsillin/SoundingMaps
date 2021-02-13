@@ -269,6 +269,7 @@ for i in range(0,120):
     sound_pres = data.lev
     ptop=300
     startlon=69.2
+    startlat=42.5
     londelt=0.76
     sound_lons = []
     sound_lats = []
