@@ -44,36 +44,24 @@ def mkdir_p(mypath):
 
 
 # grabbing data from NOMADS
-startTime = datetime.now()
+start_time = datetime.now()
 
-year = startTime.year
+year = start_time.year
 
-if startTime.month < 10:
-    month = "0" + str(startTime.month)
-else:
-    month = str(startTime.month)
+month = f"{start_time:%m}"
+day = f"{start_time.day:%d}"
+hour = f"{start_time.hour:%H}"
 
-if startTime.day < 10:
-    day = "0" + str(startTime.day)
-else:
-    day = str(startTime.day)
-
-if startTime.hour < 10:
-    hour = "0" + str(startTime.hour)
-else:
-    hour = str(startTime.hour)
-
-mdate = str(year) + str(month) + str(day)
-
+mdate = f"{start_time:%Y%m%d}"
 
 def get_init_hr(hour):
-    if int(hour) < 6:
+    if hour < 6:
         init_hour = "00"
-    elif int(hour) < 12:
+    elif hour < 12:
         init_hour = "06"
-    elif int(hour) < 17:
+    elif hour < 17:
         init_hour = "12"
-    elif int(hour) < 22:
+    elif hour < 22:
         init_hour = "18"
     else:
         init_hour = "00"
@@ -81,24 +69,15 @@ def get_init_hr(hour):
 
 
 init_hour = get_init_hr(hour)
-url = (
-    "http://nomads.ncep.noaa.gov:80/dods/gfs_0p25_1hr/gfs"
-    + mdate
-    + "/gfs_0p25_1hr_"
-    + init_hour
-    + "z"
-)
+url = f"http://nomads.ncep.noaa.gov:80/dods/gfs_0p25_1hr/gfs{mdate}/gfs_0p25_1hr_{init_hour}z"
 
 # Create new directory to store output
-output_dir = (
-    str(year) + str(month) + str(day) + "_" + str(init_hour) + "00"
-)  # this string names the output directory
-mkdir_p(output_dir)
-mkdir_p(output_dir + "/GFS")  # create subdirectory to store GFS output like this
+mkdir_p(f"{year}{month}{day}_{init_hour}00")
+mkdir_p(f"{output_dir}/GFS")  # create subdirectory to store GFS output like this
 
 # This actually opens the dataset from NOMADS and parses it with MetPy
 ds = xr.open_dataset(url)
-init_hr = dt.datetime(year, int(month), int(day), int(init_hour))
+init_hr = dt.datetime(year, month, day, init_hour)
 times = ds["tmp2m"].metpy.time  # Pull out the time dimension
 init_time = ds["time"][0]
 
