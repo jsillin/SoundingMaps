@@ -24,8 +24,8 @@ def plot_soundings(fig,ax,temp,rh,centerlat,centerlon,domainsize,cape):
     to be centered. both are floats or integers and are in degrees of latitude
     and degrees of longitude west (i.e. 70W would be input as positive 70 here)
 
-    domainsize is a string either 'local' for ~WFO-size domains, 'regional' for
-    NE/SE/Mid-Atlantic-size domains, or 'overview' to see about half the CONUS.
+    domainsize is a string either 'local' for ~WFO-size domains or 'regional' for
+    NE/SE/Mid-Atlantic-size domains (12 deg lat by 15 deg lon). More will be added soon.
 
     cape is a boolean to indicate whether you want to overlay parcel paths and
     shade CAPE/CIN on soundings with >100 J/kg of CAPE (this value can be changed)
@@ -45,8 +45,14 @@ def plot_soundings(fig,ax,temp,rh,centerlat,centerlon,domainsize,cape):
         init_lon_delt = 0.45
         lat_delts = [.2,.7,1.2,1.75,2.25,2.8]
         londelt = 0.76
-    else:
-        print('domainsize not supported yet')
+        startlon = centerlon-2+0.45
+
+    elif domainsize=='regional':
+        init_lat_delt = 6
+        init_lon_delt = 1.6
+        lat_delts = [0.6,2.5,4.5,6.4,8.4,10.25]
+        londelt = 2.9
+        startlon = centerlon-7.5+1.6
 
     startlat = centerlat-init_lat_delt
     startlon = centerlon-2+0.45
