@@ -54,6 +54,7 @@ hour = f"{start_time.hour:%H}"
 
 mdate = f"{start_time:%Y%m%d}"
 
+
 def get_init_hr(hour):
     if int(hour) < 6:
         init_hour = "00"
