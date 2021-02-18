@@ -55,13 +55,13 @@ hour = f"{start_time.hour:%H}"
 mdate = f"{start_time:%Y%m%d}"
 
 def get_init_hr(hour):
-    if hour < 6:
+    if int(hour) < 6:
         init_hour = "00"
-    elif hour < 12:
+    elif int(hour) < 12:
         init_hour = "06"
-    elif hour < 17:
+    elif int(hour) < 17:
         init_hour = "12"
-    elif hour < 22:
+    elif int(hour) < 22:
         init_hour = "18"
     else:
         init_hour = "00"
