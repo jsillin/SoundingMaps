@@ -10,8 +10,9 @@ import matplotlib.patches as mpatches
 import matplotlib.lines as lines
 import metpy.calc as mpcalc
 
-def plot_soundings(fig,ax,temp,rh,centerlat,centerlon,domainsize,cape):
-    '''
+
+def plot_soundings(fig, ax, temp, rh, centerlat, centerlon, domainsize, cape):
+    """
     This function will plot a bunch of little soundings onto a matplotlib fig,ax.
 
     temp is an xarray dataarray with temperature data on pressure levels at least
@@ -38,106 +39,141 @@ def plot_soundings(fig,ax,temp,rh,centerlat,centerlon,domainsize,cape):
         ...
         smap.plot_soundings(fig,ax1,data['temperature'],data['rh'],30.5,87.5,'local',cape=True)
 
-    '''
-    r=5
-    if domainsize=='local':
+    """
+    r = 5
+    if domainsize == "local":
         init_lat_delt = 1.625
         init_lon_delt = 0.45
-        lat_delts = [.2,.7,1.2,1.75,2.25,2.8]
+        lat_delts = [0.2, 0.7, 1.2, 1.75, 2.25, 2.8]
         londelt = 0.76
-        startlon = centerlon-2+0.45
+        startlon = centerlon - 2 + 0.45
 
-    elif domainsize=='regional':
+    elif domainsize == "regional":
         init_lat_delt = 6
         init_lon_delt = 1.6
-        lat_delts = [0.6,2.5,4.5,6.4,8.4,10.25]
+        lat_delts = [0.6, 2.5, 4.5, 6.4, 8.4, 10.25]
         londelt = 2.9
-        startlon = centerlon-7.5+1.6
+        startlon = centerlon - 7.5 + 1.6
 
-    startlat = centerlat-init_lat_delt
-    startlon = centerlon-2+0.45
+    startlat = centerlat - init_lat_delt
+    startlon = centerlon - 2 + 0.45
 
-    sound_lats=[]
-    sound_lons=[]
-    for i in range(0,6):
-        lats = startlat+lat_delts[i]
+    sound_lats = []
+    sound_lons = []
+    for i in range(0, 6):
+        lats = startlat + lat_delts[i]
         sound_lats.append(lats)
 
-    for i in range(0,r):
-        lons = -startlon-(londelt*i)
+    for i in range(0, r):
+        lons = -startlon - (londelt * i)
         sound_lons.append(lons)
 
-    plot_elevs=[0.2,0.3,0.4,0.5,0.6,0.7]
+    plot_elevs = [0.2, 0.3, 0.4, 0.5, 0.6, 0.7]
 
-    dashed_red_line = lines.Line2D([], [], linestyle='solid', color='r', label='Temperature')
-    dashed_purple_line = lines.Line2D([],[],linestyle='dashed',color='purple',label='0C Isotherm')
-    dashed_green_line = lines.Line2D([], [], linestyle='solid', color='g', label='Dew Point')
-    grey_line = lines.Line2D([], [], color='darkgray', label='MSLP (hPa)')
-    blue_line = lines.Line2D([], [], color='b',label='2m 0C Isotherm')
-    pink_line = lines.Line2D([], [], color='fuchsia',label='Surface-Based Parcel Path')
-    red = mpatches.Patch(color='tab:red',label='CAPE')
-    blue = mpatches.Patch(color='tab:blue',label='CIN')
+    dashed_red_line = lines.Line2D(
+        [], [], linestyle="solid", color="r", label="Temperature"
+    )
+    dashed_purple_line = lines.Line2D(
+        [], [], linestyle="dashed", color="purple", label="0C Isotherm"
+    )
+    dashed_green_line = lines.Line2D(
+        [], [], linestyle="solid", color="g", label="Dew Point"
+    )
+    grey_line = lines.Line2D([], [], color="darkgray", label="MSLP (hPa)")
+    blue_line = lines.Line2D([], [], color="b", label="2m 0C Isotherm")
+    pink_line = lines.Line2D([], [], color="fuchsia", label="Surface-Based Parcel Path")
+    red = mpatches.Patch(color="tab:red", label="CAPE")
+    blue = mpatches.Patch(color="tab:blue", label="CIN")
 
-    if cape==True:
+    if cape == True:
         for k in range(len(plot_elevs)):
             soundlat = sound_lats[k]
             plot_elev = plot_elevs[k]
 
-            if k==0:
-                s=1
+            if k == 0:
+                s = 1
             else:
-                s=0
+                s = 0
 
-            for i in range(s,r):
+            for i in range(s, r):
                 sound_pres = temp.lev
-                soundlon = -(startlon+(londelt*i))
-                sound_temps = temp.interp(lat=soundlat,lon=soundlon)-273.15
-                sound_rh = rh.interp(lat=soundlat,lon=soundlon)
-                sound_dp = mpcalc.dewpoint_from_relative_humidity(sound_temps.data*units.degC,sound_rh.data*units.percent)
-                skew = SkewT(fig=fig,rect=(0.75-(0.15*i),plot_elev,.15,.1))
+                soundlon = -(startlon + (londelt * i))
+                sound_temps = temp.interp(lat=soundlat, lon=soundlon) - 273.15
+                sound_rh = rh.interp(lat=soundlat, lon=soundlon)
+                sound_dp = mpcalc.dewpoint_from_relative_humidity(
+                    sound_temps.data * units.degC, sound_rh.data * units.percent
+                )
+                skew = SkewT(fig=fig, rect=(0.75 - (0.15 * i), plot_elev, 0.15, 0.1))
 
-                parcel_prof = mpcalc.parcel_profile(sound_pres,sound_temps[0].data*units.degC,sound_dp[0])
-                cape = mpcalc.cape_cin(sound_pres,sound_temps.data*units.degC,sound_dp,parcel_prof)
+                parcel_prof = mpcalc.parcel_profile(
+                    sound_pres, sound_temps[0].data * units.degC, sound_dp[0]
+                )
+                cape = mpcalc.cape_cin(
+                    sound_pres, sound_temps.data * units.degC, sound_dp, parcel_prof
+                )
                 capeout = int(cape[0].m)
                 cinout = int(cape[1].m)
 
-                skew.plot(sound_pres,sound_dp,'g',linewidth=3)
-                skew.plot(sound_pres,sound_temps,'r',linewidth=3)
+                skew.plot(sound_pres, sound_dp, "g", linewidth=3)
+                skew.plot(sound_pres, sound_temps, "r", linewidth=3)
 
-                if capeout >100:
+                if capeout > 100:
                     # Shade areas of CAPE and CIN
                     print(sound_temps)
                     print(parcel_prof)
-                    skew.shade_cin(sound_pres, sound_temps.data*units.degC, parcel_prof)
-                    skew.shade_cape(sound_pres, sound_temps.data*units.degC, parcel_prof)
-                    skew.plot(sound_pres,parcel_prof,color='fuchsia',linewidth=1)
+                    skew.shade_cin(
+                        sound_pres, sound_temps.data * units.degC, parcel_prof
+                    )
+                    skew.shade_cape(
+                        sound_pres, sound_temps.data * units.degC, parcel_prof
+                    )
+                    skew.plot(sound_pres, parcel_prof, color="fuchsia", linewidth=1)
 
-                skew.ax.axvline(0, color='purple', linestyle='--', linewidth=3)
-                skew.ax.set_ylim((1000,300))
-                skew.ax.axis('off')
+                skew.ax.axvline(0, color="purple", linestyle="--", linewidth=3)
+                skew.ax.set_ylim((1000, 300))
+                skew.ax.axis("off")
 
-        leg = ax.legend(handles=[dashed_red_line,dashed_green_line,dashed_purple_line,pink_line,red,blue],title='Sounding Legend',loc=4,framealpha=1)
+        leg = ax.legend(
+            handles=[
+                dashed_red_line,
+                dashed_green_line,
+                dashed_purple_line,
+                pink_line,
+                red,
+                blue,
+            ],
+            title="Sounding Legend",
+            loc=4,
+            framealpha=1,
+        )
 
     else:
         for k in range(len(plot_elevs)):
             soundlat = sound_lats[k]
             plot_elev = plot_elevs[k]
 
-            if k==0:
-                s=1
+            if k == 0:
+                s = 1
             else:
-                s=0
+                s = 0
 
-            for i in range(s,r):
-                soundlon = -(startlon+(londelt*i))
+            for i in range(s, r):
+                soundlon = -(startlon + (londelt * i))
                 sound_pres = temp.lev
-                sound_temps = temp.interp(lat=soundlat,lon=soundlon)-273.15
-                sound_rh = rh.interp(lat=soundlat,lon=soundlon)
-                sound_dp = mpcalc.dewpoint_from_relative_humidity(sound_temps.data*units.degC,sound_rh.data*units.percent)
-                skew = SkewT(fig=fig,rect=(0.75-(0.15*i),plot_elev,.15,.1))
-                skew.plot(sound_pres,sound_dp,'g',linewidth=3)
-                skew.plot(sound_pres,sound_temps,'r',linewidth=3)
-                skew.ax.axvline(0, color='purple', linestyle='--', linewidth=3)
-                skew.ax.set_ylim((1000,300))
-                skew.ax.axis('off')
-        leg = ax.legend(handles=[dashed_red_line,dashed_green_line,dashed_purple_line],title='Sounding Legend',loc=4,framealpha=1)
+                sound_temps = temp.interp(lat=soundlat, lon=soundlon) - 273.15
+                sound_rh = rh.interp(lat=soundlat, lon=soundlon)
+                sound_dp = mpcalc.dewpoint_from_relative_humidity(
+                    sound_temps.data * units.degC, sound_rh.data * units.percent
+                )
+                skew = SkewT(fig=fig, rect=(0.75 - (0.15 * i), plot_elev, 0.15, 0.1))
+                skew.plot(sound_pres, sound_dp, "g", linewidth=3)
+                skew.plot(sound_pres, sound_temps, "r", linewidth=3)
+                skew.ax.axvline(0, color="purple", linestyle="--", linewidth=3)
+                skew.ax.set_ylim((1000, 300))
+                skew.ax.axis("off")
+        leg = ax.legend(
+            handles=[dashed_red_line, dashed_green_line, dashed_purple_line],
+            title="Sounding Legend",
+            loc=4,
+            framealpha=1,
+        )
