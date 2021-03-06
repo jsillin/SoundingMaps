@@ -17,6 +17,8 @@
  * option to plot wet bulb profiles
  * black dot marks origin of sounding data
 
+This code now relies on MetPy 1.0, so make sure you're working with the most up-to-date version
+
  This is very much a work in progress! The plotting routines are a bit clumsy
  and it's not as easy as it should be to change domain locations/sizes.
 
