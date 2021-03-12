@@ -108,25 +108,11 @@ def get_init_time(model):
                 init_hour = '0'+str(init_hour)
             else:
                 init_hour = str(init_hour)
-    if month <10:
-        month = '0'+str(month)
-    else:
-        month = str(month)
 
-    if day <10:
-        day = '0'+str(day)
-    else:
-        day = str(day)
+    # Format the current date and time
+    mdate = "{:4d}{:02d}{:02d}".format(year, month, day)  # Formats the string to YYYYMMDD format
 
-    if hour <10:
-        hour = '0'+str(hour)
-    else:
-        hour = str(hour)
-
-    mdate = str(year)+month+day
-    output = [mdate,init_hour]
-
-    return output
+    return mdate, init_hour
 
 
 def get_prev_init_time(model):
@@ -246,32 +232,8 @@ def get_prev_init_time(model):
             pimonth = month
             piyear = year
 
-    if month <10:
-        month = '0'+str(month)
-    else:
-        month = str(month)
-
-    if day <10:
-        day = '0'+str(day)
-    else:
-        day = str(day)
-
-    if hour <10:
-        hour = '0'+str(hour)
-    else:
-        hour = str(hour)
-
-    if pimonth <10:
-        pimonth = '0'+str(pimonth)
-    else:
-        pimonth = str(pimonth)
-
-    if piday <10:
-        piday = '0'+str(piday)
-    else:
-        piday = str(piday)
-
-    mdate = str(piyear)+pimonth+piday
+    # Format the current date and time
+    mdate = "{:4d}{:02d}{:02d}".format(piyear, pimonth, piday)  # Formats the string to YYYYMMDD format
     output = [mdate,prev_init_hour]
 
     return output
@@ -281,8 +243,7 @@ def get_url(model):
     Return the NOMADS URL for a model of choice. Currently supported options are
     GFS, NAM, HRRR, RAP
     '''
-    mdate = get_init_time(model)[0]
-    init_hour = get_init_time(model)[1]
+    mdate, init_hour = get_init_time(model)
     if model == 'HRRR':
         url = 'http://nomads.ncep.noaa.gov:80/dods/hrrr/hrrr'+mdate+'/hrrr_sfc.t'+init_hour+'z'
     elif model == 'NAM':
