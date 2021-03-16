@@ -100,8 +100,7 @@ else:
 
 #Prepare to pull data from NOMADS
 url = spt.get_url(model)
-mdate = spt.get_init_time(model)[0]
-init_hour = spt.get_init_time(model)[1]
+mdate, init_hour = spt.get_init_time(model)
 
 # Create new directory
 output_dir = mdate+'_'+init_hour+'00'
