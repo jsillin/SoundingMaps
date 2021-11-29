@@ -106,7 +106,7 @@ def plot_soundings(fig,ax,temp,rh,sfc_pressure,centerlat,centerlon,domainsize,mo
     blue = mpatches.Patch(color='tab:blue',label='CIN')
 
     # do the plotting based on user inputs
-    if cape + wetbulb == 2:
+    if cape and wetbulb is True:
             print('CAPE + Wetbulb')
             for i, plot_elev in enumerate(plot_elevs):
                 soundlat = sound_lats[i]
