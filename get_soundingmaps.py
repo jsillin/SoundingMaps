@@ -61,13 +61,13 @@ if interactive == True:
 # In quiet mode, domain info is set with variables here
 else:
     domainsize='regional'
-    domainname='kansas'
-    centerlat = 38
-    centerlon = 98
-    model = 'NAM'
-    cape_input = 'yes'
+    domainname='raleigh'
+    centerlat = 35.8
+    centerlon = 78.8
+    model = 'GFS'
+    cape_input = 'no'
     wetbulb_input = 'yes'
-    season = 'severe'
+    season = 'winter'
 
 # Regardless of which mode is used, a few more variables will need to be set
 # based on the domain of interest:
@@ -192,6 +192,7 @@ if season == 'winter':
         mslp = data['mslp']/100.
         mslpc = mslp.squeeze()
         mslpc=ndimage.gaussian_filter(mslpc,sigma=1,order=0)
+        sfc_pressure = data['spres'].squeeze()/100
 
         #This creates a nice-looking datetime label
         dtfs = str(time.dt.strftime('%Y-%m-%d_%H%MZ').item())
@@ -246,8 +247,7 @@ if season == 'winter':
         ax1.barbs(x[wind_slice],y[wind_slice],u10m[wind_slice,wind_slice],v10m[wind_slice,wind_slice], length=6,color='gray')
 
         #Plot soundings
-        smap.plot_soundings(fig,ax1,prs_temps,prs_relh,centerlat,centerlon,domainsize,model,cape=cape_bool,wetbulb=wetbulb_bool)
-
+        smap.plot_soundings(fig,ax1,prs_temps,prs_relh,sfc_pressure,centerlat,centerlon,domainsize,model,cape=cape_bool,wetbulb=wetbulb_bool)
         #Set plot extent and titles
         ax1.set_extent((west,east,south,north))
         ax1.set_title('Precipitation Type, MSLP, and Selected Soundings',fontsize=16)

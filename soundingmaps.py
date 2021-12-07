@@ -16,7 +16,7 @@ import matplotlib.lines as lines
 import metpy.calc as mpcalc
 import supplementary_tools as spt
 
-def plot_soundings(fig,ax,temp,rh,sfc_pressure,centerlat,centerlon,domainsize,model,cape,wetbulb):
+def plot_soundings(fig,ax,temp,rh,sfc_pressure,centerlat,centerlon,domainsize,model,cape=False,wetbulb=False):
     """
     This function will plot a bunch of little soundings onto a matplotlib fig,ax.
 
